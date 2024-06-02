@@ -8,7 +8,7 @@ use App\Models\Categories;
 use App\Models\Product;
 use App\Models\Products;
 use App\Models\Order;
-use App\Models\OrderProduct;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
@@ -100,8 +100,13 @@ class AdminController extends Controller
 
     public function orders()
     {
+        $orders = DB::table('orders')
+        ->join('order_products', 'orders.user_id', '=', 'order_products.order_id')
+        ->select('orders.*', 'order_products.product_id')
+        ->get();
+
         return view('admin.orders',[
-            'orders' => Order::query()->get()
+            'orders' => $orders
         ]);
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+
 
 class Order extends Model
 {
@@ -52,4 +54,15 @@ class Order extends Model
         $this->state = self::STATE_PROCESSED;
         return $this->save();
     }
+
+    public function getAllOrders()
+    {
+       $table = DB::table('orders')
+        ->select('orders.user_id','orders.state', 'order_products.product_id')
+        ->join('order_products','order_procuts.order_id','=','orders.user_id')
+        ->get();
+
+        return $table;
+    }
+
 }
